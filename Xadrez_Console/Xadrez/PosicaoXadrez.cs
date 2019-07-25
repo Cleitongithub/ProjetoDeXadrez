@@ -5,7 +5,7 @@ namespace Xadrez_Console.Xadrez
 {
     class PosicaoXadrez
     {
-        public char coluna { get; set; }
+        public int coluna { get; set; }
         public int linha { get; set; }
 
         public PosicaoXadrez(char coluna, int linha)
@@ -17,6 +17,7 @@ namespace Xadrez_Console.Xadrez
         {
             return new Posicao(8 - linha, coluna - 'a');
         }
+        
 
         public override string ToString()
         {
