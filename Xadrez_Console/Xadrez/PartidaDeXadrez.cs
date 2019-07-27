@@ -56,7 +56,8 @@ namespace Xadrez
         {
             Peca pecaCapturada = executamovimento(origem, destino);
 
-            if (estaEmXeque(jogadorAtual)){
+            if (estaEmXeque(jogadorAtual))
+            {
                 desFazMovimento(origem, destino, pecaCapturada);
                 throw new TabuleiroException("voce nao pode se colocar em xeque");
             }
@@ -68,9 +69,15 @@ namespace Xadrez
             {
                 xeque = false;
             }
-
-            turno++;
-            mudaJogador();
+            if (estaEmXeque(adversaria(jogadorAtual)))
+            {
+                Terminada = true;
+            }
+            else
+            {
+                turno++;
+                mudaJogador();
+            }
         }
 
         public void validarposicaoDeOrigem(Posicao pos)
@@ -174,6 +181,35 @@ namespace Xadrez
             return false;
         }
 
+        public bool testXequeMate(Cor cor)
+        {
+            if (!estaEmXeque(cor))
+            {
+                return false;
+            }
+            foreach (Peca x in pecasEmJogo(cor))
+            {
+                bool[,] mat = x.movimentosPossiveis();
+                for (int i = 0; i < tab.linhas; i++)
+                {
+                    for (int j = 0; j < tab.colunas; j++)
+                    {
+                        if (mat[i, j])
+                        {
+                            Posicao destino = new Posicao(i, j);
+                            Peca pecaCapturada = executamovimento(x.posicao, destino);
+                            bool testeXeque = estaEmXeque(cor);
+                            desFazMovimento(x.posicao, destino, pecaCapturada);
+                            if (!testeXeque)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        }
 
         public void colocarNovaPeca(char coluna, int linha, Peca peca)
         {
